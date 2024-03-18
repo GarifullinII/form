@@ -10,6 +10,7 @@ class FormPage extends StatefulWidget {
 }
 
 class _FormPageState extends State<FormPage> {
+  final _formKey = GlobalKey<FormState>();
   final _textController = TextEditingController();
   late String _showText = '';
 
@@ -44,6 +45,7 @@ class _FormPageState extends State<FormPage> {
             ),
           ),
           Form(
+            key: _formKey,
             child: Padding(
               padding: const EdgeInsets.all(20),
               child: TextFormField(
@@ -67,6 +69,11 @@ class _FormPageState extends State<FormPage> {
                     borderSide: BorderSide(color: Colors.blue, width: 2),
                   ),
                 ),
+                validator: (String? value) {
+                  return (value == null || value == '')
+                      ? 'Field should not be empty'
+                      : null;
+                },
               ),
             ),
           ),
@@ -92,8 +99,10 @@ class _FormPageState extends State<FormPage> {
   }
 
   void _submitText() {
-    _showText = _textController.text;
-    setState(() {});
+    if (_formKey.currentState!.validate()) {
+      _showText = _textController.text;
+      setState(() {});
+    }
   }
 
   void _deleteText() {
